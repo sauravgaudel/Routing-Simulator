@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NetPulse &mdash; Adaptive Routing Simulator</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================= TOP BAR ============================= -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 26 26">
+          <circle cx="13" cy="13" r="4" class="brand-node"></circle>
+          <circle cx="4" cy="4" r="2.4" class="brand-node brand-node--dim"></circle>
+          <circle cx="22" cy="4" r="2.4" class="brand-node brand-node--dim"></circle>
+          <circle cx="4" cy="22" r="2.4" class="brand-node brand-node--dim"></circle>
+          <circle cx="22" cy="22" r="2.4" class="brand-node brand-node--dim"></circle>
+          <line x1="13" y1="13" x2="4" y2="4" class="brand-link"></line>
+          <line x1="13" y1="13" x2="22" y2="4" class="brand-link"></line>
+          <line x1="13" y1="13" x2="4" y2="22" class="brand-link"></line>
+          <line x1="13" y1="13" x2="22" y2="22" class="brand-link"></line>
+        </svg>
+      </span>
+      <div class="brand-text">
+        <span class="brand-title">NetPulse</span>
+        <span class="brand-sub">Adaptive Fault-Tolerant Routing Simulator</span>
+      </div>
+    </div>
+
+    <div class="topbar-status">
+      <span class="status-dot" id="apiStatusDot"></span>
+      <span id="apiStatusText">Connecting to engine&hellip;</span>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- ============================= LEFT SIDEBAR ============================= -->
+    <aside class="sidebar sidebar--left">
+      <section class="panel">
+        <h2 class="panel-title">Topology</h2>
+        <div class="tool-grid">
+          <button class="tool-btn" data-mode="add-router" title="Click canvas to place a router">
+            <span class="tool-icon">＋</span> Add Router
+          </button>
+          <button class="tool-btn" data-mode="delete-router" title="Click a router to delete it">
+            <span class="tool-icon">－</span> Delete Router
+          </button>
+          <button class="tool-btn" data-mode="connect" title="Click two routers to link them">
+            <span class="tool-icon">⟷</span> Connect
+          </button>
+          <button class="tool-btn" data-mode="delete-link" title="Click a link to remove it">
+            <span class="tool-icon">✕</span> Delete Link
+          </button>
+          <button class="tool-btn" data-mode="fail-link" title="Click a link to simulate failure">
+            <span class="tool-icon">⚡</span> Fail Link
+          </button>
+          <button class="tool-btn" data-mode="move" title="Drag routers around the canvas">
+            <span class="tool-icon">✋</span> Move
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Algorithms</h2>
+        <div class="tool-grid tool-grid--single">
+          <button class="tool-btn tool-btn--accent" id="btnDijkstra">Run Dijkstra</button>
+          <button class="tool-btn tool-btn--accent" id="btnBFS">Run BFS</button>
+          <button class="tool-btn tool-btn--accent" id="btnDFS">Run DFS</button>
+          <button class="tool-btn tool-btn--accent" id="btnBellman">Run Bellman-Ford</button>
+        </div>
+        <p class="hint-text" id="algoSourceHint">Select a source router on the canvas first.</p>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Transmit Data</h2>
+        <div class="form-stack">
+          <label class="field-label">Source
+            <select id="sendSource" class="field-input"></select>
+          </label>
+          <label class="field-label">Destination
+            <select id="sendDestination" class="field-input"></select>
+          </label>
+          <label class="field-label">Message
+            <input id="sendMessage" class="field-input" type="text" placeholder="Hello World" maxlength="64" />
+          </label>
+          <button class="tool-btn tool-btn--primary" id="btnSend">Send Data ▸</button>
+        </div>
+      </section>
+
+      <section class="panel panel--stats">
+        <h2 class="panel-title">Statistics</h2>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat"><span class="stat-value" id="statRouters">0</span><span class="stat-label">Routers</span></div>
+          <div class="stat"><span class="stat-value" id="statLinks">0</span><span class="stat-label">Links</span></div>
+          <div class="stat"><span class="stat-value" id="statAvgCost">0</span><span class="stat-label">Avg Cost</span></div>
+          <div class="stat"><span class="stat-value" id="statSent">0</span><span class="stat-label">Packets Sent</span></div>
+          <div class="stat"><span class="stat-value" id="statDelivered">0</span><span class="stat-label">Delivered</span></div>
+          <div class="stat"><span class="stat-value" id="statLost">0</span><span class="stat-label">Lost</span></div>
+        </div>
+        <div class="speed-row">
+          <span>Transmission Speed</span>
+          <span id="statSpeed">0 bit/s</span>
+        </div>
+      </section>
+    </aside>
+
+    <!-- ============================= CENTER CANVAS ============================= -->
+    <main class="canvas-wrap">
+      <div class="canvas-toolbar">
+        <span class="mode-badge" id="modeBadge">Mode: Idle</span>
+        <span class="canvas-hint" id="canvasHint">Choose a tool from the left panel to get started.</span>
+      </div>
+      <svg id="networkCanvas" class="network-canvas" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="routerGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="var(--accent-glow)" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="var(--accent-glow)" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3.2"/>
+          </filter>
+        </defs>
+        <g id="linksLayer"></g>
+        <g id="packetLayer"></g>
+        <g id="routersLayer"></g>
+      </svg>
+    </main>
+
+    <!-- ============================= RIGHT SIDEBAR ============================= -->
+    <aside class="sidebar sidebar--right">
+      <section class="panel">
+        <h2 class="panel-title">Router Details</h2>
+        <div id="routerDetails" class="detail-box">
+          <p class="placeholder-text">Select a router to inspect it.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Routing Table</h2>
+        <div id="routingTable" class="detail-box">
+          <p class="placeholder-text">Routing table will appear here.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Packet Details</h2>
+        <div id="packetDetails" class="detail-box">
+          <p class="placeholder-text">Send data to see packet breakdown.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Binary Stream</h2>
+        <div id="binaryStream" class="detail-box binary-box">
+          <p class="placeholder-text">Binary conversion will stream here.</p>
+        </div>
+      </section>
+    </aside>
+
+  </div>
+
+  <!-- ============================= BOTTOM CONSOLE ============================= -->
+  <footer class="console">
+    <div class="console-header">
+      <span>Event Log</span>
+      <button id="clearConsole" class="console-clear">Clear</button>
+    </div>
+    <div class="console-body" id="consoleBody"></div>
+  </footer>
+
+</div>
+
+<!-- Naming-prompt modal for new routers -->
+<div class="modal-overlay" id="namePromptOverlay">
+  <div class="modal">
+    <h3>Name this router</h3>
+    <input type="text" id="namePromptInput" class="field-input" placeholder="e.g. Core-1" maxlength="20" />
+    <div class="modal-actions">
+      <button class="tool-btn" id="namePromptCancel">Cancel</button>
+      <button class="tool-btn tool-btn--primary" id="namePromptConfirm">Create</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastHost" class="toast-host"></div>
+
+<script src="api.js"></script>
+<script src="graph.js"></script>
+<script src="animation.js"></script>
+<script src="packet.js"></script>
+<script src="ui.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

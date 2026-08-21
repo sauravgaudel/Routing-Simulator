@@ -1,0 +1,85 @@
+/* ==========================================================================
+   animations.css
+   Every @keyframes definition used across the app, kept in one place.
+   ========================================================================== */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dotBreathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.82); }
+}
+
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.35); }
+  50% { box-shadow: 0 0 0 6px rgba(34,211,238,0); }
+}
+
+@keyframes routerPulse {
+  0%   { r: 18; opacity: 0.9; stroke-width: 3; }
+  100% { r: 42; opacity: 0; stroke-width: 0.5; }
+}
+
+@keyframes dashFlow {
+  to { stroke-dashoffset: -26; }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(40px) scale(0.96); }
+}
+
+@keyframes logIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes pulseBorder {
+  0%, 100% { border-color: var(--glass-border); }
+  50% { border-color: var(--glass-border-hi); }
+}
+
+@keyframes bannerGlow {
+  0%, 100% { box-shadow: 0 0 16px rgba(34,211,238,0.15); }
+  50% { box-shadow: 0 0 26px rgba(34,211,238,0.35); }
+}
+.transmission-banner.show { animation: bannerGlow 1.6s ease-in-out infinite; }
+
+@keyframes statBump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.stat-bump { animation: statBump 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes screenFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.app-shell { animation: screenFadeIn 0.5s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

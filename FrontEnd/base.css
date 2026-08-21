@@ -1,0 +1,120 @@
+/* ==========================================================================
+   base.css
+   Design tokens, reset, and the top-level full-screen grid layout.
+   ========================================================================== */
+
+:root {
+  /* --- surfaces --- */
+  --bg-deep: #060810;
+  --bg-0: #0a0e18;
+  --bg-1: #0e1424;
+  --glass-fill: rgba(18, 24, 40, 0.55);
+  --glass-fill-strong: rgba(22, 29, 48, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hi: rgba(120, 170, 255, 0.35);
+
+  /* --- text --- */
+  --text-hi: #f1f5fd;
+  --text-mid: #9fb0cc;
+  --text-dim: #5c6b8a;
+
+  /* --- accents --- */
+  --accent: #3b82f6;
+  --accent-hi: #60a5fa;
+  --cyan: #22d3ee;
+  --cyan-hi: #67e8f9;
+  --violet: #a78bfa;
+  --amber: #f5a623;
+  --red: #f5566b;
+  --green: #34d399;
+
+  /* --- router / packet state colors --- */
+  --state-idle: #3b82f6;
+  --state-receiving: #22d3ee;
+  --state-processing: #f5a623;
+  --state-forwarding: #34d399;
+  --state-down: #f5566b;
+
+  /* --- type --- */
+  --font-ui: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  /* --- radii / shadow --- */
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-glow-blue: 0 0 24px rgba(59, 130, 246, 0.35);
+  --shadow-glow-cyan: 0 0 24px rgba(34, 211, 238, 0.35);
+
+  /* --- layout metrics --- */
+  --sidebar-w: 76px;
+  --panel-w: 348px;
+  --console-h: 230px;
+  --console-h-collapsed: 44px;
+  --header-h: 88px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--text-hi);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+::selection { background: var(--accent); color: #fff; }
+
+a { color: var(--accent-hi); }
+
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-thumb { background: rgba(120, 140, 180, 0.25); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(120, 140, 180, 0.4); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ==========================================================================
+   APP SHELL — full-viewport grid: header / main / console
+   ========================================================================== */
+.app-shell {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: var(--header-h) 1fr var(--console-h);
+  background:
+    radial-gradient(ellipse 900px 500px at 10% -10%, rgba(59, 130, 246, 0.14), transparent 60%),
+    radial-gradient(ellipse 900px 600px at 95% 10%, rgba(34, 211, 238, 0.10), transparent 55%),
+    radial-gradient(ellipse 800px 500px at 50% 120%, rgba(167, 139, 250, 0.08), transparent 60%),
+    var(--bg-deep);
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.app-shell.console-collapsed {
+  grid-template-rows: var(--header-h) 1fr var(--console-h-collapsed);
+}
+
+.main-area {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr var(--panel-w);
+  gap: 14px;
+  padding: 0 14px 14px;
+  min-height: 0;
+  min-width: 0;
+}
+
+@media (max-width: 1080px) {
+  :root { --panel-w: 300px; }
+}
+
+@media (max-width: 900px) {
+  .main-area { grid-template-columns: var(--sidebar-w) 1fr; }
+  .info-panel { display: none; }
+}
