@@ -4,17 +4,33 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>NetPulse &mdash; Adaptive Routing Simulator</title>
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="base.css" />
+<link rel="stylesheet" href="components.css" />
+<link rel="stylesheet" href="canvas.css" />
+<link rel="stylesheet" href="animations.css" />
 </head>
 <body>
 
-<div class="app">
+<!-- ============================= STARTUP LOADING SCREEN ============================= -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loader-rings">
+    <div class="loader-ring r1"></div>
+    <div class="loader-ring r2"></div>
+    <div class="loader-ring r3"></div>
+    <div class="loader-core"></div>
+  </div>
+  <div class="loader-title">NetPulse</div>
+  <div class="loader-status" id="loaderStatus">Booting simulation engine…</div>
+  <div class="loader-bar-track"><div class="loader-bar-fill" id="loaderBarFill"></div></div>
+</div>
 
-  <!-- ============================= TOP BAR ============================= -->
-  <header class="topbar">
+<div class="app-shell" id="appShell">
+
+  <!-- ============================= HEADER ============================= -->
+  <header class="app-header">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 26 26">
+        <svg width="22" height="22" viewBox="0 0 26 26">
           <circle cx="13" cy="13" r="4" class="brand-node"></circle>
           <circle cx="4" cy="4" r="2.4" class="brand-node brand-node--dim"></circle>
           <circle cx="22" cy="4" r="2.4" class="brand-node brand-node--dim"></circle>
@@ -28,162 +44,239 @@
       </span>
       <div class="brand-text">
         <span class="brand-title">NetPulse</span>
-        <span class="brand-sub">Adaptive Fault-Tolerant Routing Simulator</span>
+        <span class="brand-sub">Adaptive Routing Simulator</span>
       </div>
     </div>
 
-    <div class="topbar-status">
+    <div class="stat-strip">
+      <div class="stat-card glass">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><circle cx="7" cy="7" r="0.8" fill="currentColor"/><circle cx="7" cy="17" r="0.8" fill="currentColor"/></svg></span>
+        <span class="stat-copy"><span class="stat-value" id="statRouters">0</span><span class="stat-label">Routers</span></span>
+      </div>
+      <div class="stat-card glass">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></span>
+        <span class="stat-copy"><span class="stat-value" id="statLinks">0</span><span class="stat-label">Links</span></span>
+      </div>
+      <div class="stat-card glass">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <span class="stat-copy"><span class="stat-value" id="statAvgCost">0</span><span class="stat-label">Avg Cost</span></span>
+      </div>
+      <div class="stat-card glass">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg></span>
+        <span class="stat-copy"><span class="stat-value" id="statSent">0</span><span class="stat-label">Packets Sent</span></span>
+      </div>
+      <div class="stat-card glass">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></span>
+        <span class="stat-copy"><span class="stat-value" id="statDelivered">0</span><span class="stat-label">Delivered</span></span>
+      </div>
+      <div class="stat-card glass" id="statActiveCard">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 12h4l2-8 4 16 2-8h6"/></svg></span>
+        <span class="stat-copy"><span class="stat-value" id="statActive">Idle</span><span class="stat-label">Transmission</span></span>
+      </div>
+    </div>
+
+    <div class="topbar-status glass">
       <span class="status-dot" id="apiStatusDot"></span>
-      <span id="apiStatusText">Connecting to engine&hellip;</span>
+      <span id="apiStatusText">Connecting…</span>
     </div>
   </header>
 
-  <div class="layout">
+  <!-- ============================= MAIN AREA ============================= -->
+  <div class="main-area">
 
-    <!-- ============================= LEFT SIDEBAR ============================= -->
-    <aside class="sidebar sidebar--left">
-      <section class="panel">
-        <h2 class="panel-title">Topology</h2>
-        <div class="tool-grid">
-          <button class="tool-btn" data-mode="add-router" title="Click canvas to place a router">
-            <span class="tool-icon">＋</span> Add Router
-          </button>
-          <button class="tool-btn" data-mode="delete-router" title="Click a router to delete it">
-            <span class="tool-icon">－</span> Delete Router
-          </button>
-          <button class="tool-btn" data-mode="connect" title="Click two routers to link them">
-            <span class="tool-icon">⟷</span> Connect
-          </button>
-          <button class="tool-btn" data-mode="delete-link" title="Click a link to remove it">
-            <span class="tool-icon">✕</span> Delete Link
-          </button>
-          <button class="tool-btn" data-mode="fail-link" title="Click a link to simulate failure">
-            <span class="tool-icon">⚡</span> Fail Link
-          </button>
-          <button class="tool-btn" data-mode="move" title="Drag routers around the canvas">
-            <span class="tool-icon">✋</span> Move
-          </button>
-        </div>
-      </section>
+    <!-- ---------- ICON SIDEBAR ---------- -->
+    <nav class="icon-sidebar glass">
+      <button class="icon-btn" data-mode="add-router" aria-label="Add Router">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M18 15.5v3M16.5 17h3"/></svg>
+        <span class="tooltip">Add Router <span class="kbd">A</span></span>
+      </button>
+      <button class="icon-btn" data-mode="connect" aria-label="Connect">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+        <span class="tooltip">Connect <span class="kbd">C</span></span>
+      </button>
+      <button class="icon-btn danger" data-mode="delete-router" aria-label="Delete Router">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M16.5 17h3"/></svg>
+        <span class="tooltip">Delete Router <span class="kbd">X</span></span>
+      </button>
+      <button class="icon-btn danger" data-mode="delete-link" aria-label="Delete Link">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.84 12.25 20.9 10.2a4.5 4.5 0 0 0-6.36-6.36L12.6 5.9M5.16 11.75 3.1 13.8a4.5 4.5 0 0 0 6.36 6.36l1.94-1.94M8 8l8 8"/></svg>
+        <span class="tooltip">Delete Link <span class="kbd">V</span></span>
+      </button>
+      <button class="icon-btn danger" data-mode="fail-link" aria-label="Fail Link">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg>
+        <span class="tooltip">Fail Link <span class="kbd">Z</span></span>
+      </button>
+      <button class="icon-btn" data-mode="move" aria-label="Move">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3"/></svg>
+        <span class="tooltip">Move <span class="kbd">M</span></span>
+      </button>
 
-      <section class="panel">
-        <h2 class="panel-title">Algorithms</h2>
-        <div class="tool-grid tool-grid--single">
-          <button class="tool-btn tool-btn--accent" id="btnDijkstra">Run Dijkstra</button>
-          <button class="tool-btn tool-btn--accent" id="btnBFS">Run BFS</button>
-          <button class="tool-btn tool-btn--accent" id="btnDFS">Run DFS</button>
-          <button class="tool-btn tool-btn--accent" id="btnBellman">Run Bellman-Ford</button>
-        </div>
-        <p class="hint-text" id="algoSourceHint">Select a source router on the canvas first.</p>
-      </section>
+      <div class="sep"></div>
 
-      <section class="panel">
-        <h2 class="panel-title">Transmit Data</h2>
-        <div class="form-stack">
-          <label class="field-label">Source
-            <select id="sendSource" class="field-input"></select>
-          </label>
-          <label class="field-label">Destination
-            <select id="sendDestination" class="field-input"></select>
-          </label>
-          <label class="field-label">Message
-            <input id="sendMessage" class="field-input" type="text" placeholder="Hello World" maxlength="64" />
-          </label>
-          <button class="tool-btn tool-btn--primary" id="btnSend">Send Data ▸</button>
-        </div>
-      </section>
+      <button class="icon-btn" id="btnDijkstra" aria-label="Dijkstra">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/></svg>
+        <span class="tooltip">Run Dijkstra <span class="kbd">J</span></span>
+      </button>
+      <button class="icon-btn" id="btnBFS" aria-label="BFS">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="8.5" y="14" width="7" height="7" rx="1.2"/></svg>
+        <span class="tooltip">Run BFS <span class="kbd">B</span></span>
+      </button>
+      <button class="icon-btn" id="btnDFS" aria-label="DFS">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v10a4 4 0 0 0 4 4h8"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="17" r="2"/><circle cx="18" cy="7" r="2"/></svg>
+        <span class="tooltip">Run DFS <span class="kbd">F</span></span>
+      </button>
+      <button class="icon-btn" id="btnBellman" aria-label="Bellman-Ford">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-8 4 16 2-8h6"/></svg>
+        <span class="tooltip">Bellman-Ford <span class="kbd">N</span></span>
+      </button>
 
-      <section class="panel panel--stats">
-        <h2 class="panel-title">Statistics</h2>
-        <div class="stats-grid" id="statsGrid">
-          <div class="stat"><span class="stat-value" id="statRouters">0</span><span class="stat-label">Routers</span></div>
-          <div class="stat"><span class="stat-value" id="statLinks">0</span><span class="stat-label">Links</span></div>
-          <div class="stat"><span class="stat-value" id="statAvgCost">0</span><span class="stat-label">Avg Cost</span></div>
-          <div class="stat"><span class="stat-value" id="statSent">0</span><span class="stat-label">Packets Sent</span></div>
-          <div class="stat"><span class="stat-value" id="statDelivered">0</span><span class="stat-label">Delivered</span></div>
-          <div class="stat"><span class="stat-value" id="statLost">0</span><span class="stat-label">Lost</span></div>
-        </div>
-        <div class="speed-row">
-          <span>Transmission Speed</span>
-          <span id="statSpeed">0 bit/s</span>
-        </div>
-      </section>
-    </aside>
+      <div class="sep"></div>
 
-    <!-- ============================= CENTER CANVAS ============================= -->
-    <main class="canvas-wrap">
-      <div class="canvas-toolbar">
-        <span class="mode-badge" id="modeBadge">Mode: Idle</span>
-        <span class="canvas-hint" id="canvasHint">Choose a tool from the left panel to get started.</span>
+      <button class="icon-btn icon-btn--primary" id="btnSendData" aria-label="Send Data">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
+        <span class="tooltip">Send Data <span class="kbd">S</span></span>
+      </button>
+      <button class="icon-btn danger" id="btnReset" aria-label="Reset">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-6h6"/></svg>
+        <span class="tooltip">Reset Topology <span class="kbd">R</span></span>
+      </button>
+    </nav>
+
+    <!-- ---------- CANVAS STAGE ---------- -->
+    <main class="canvas-stage glass">
+      <div class="stage-toolbar">
+        <span class="mode-badge glass" id="modeBadge"><span class="dot"></span><span class="mode-label">Idle</span></span>
+        <span class="canvas-hint glass" id="canvasHint">Choose a tool from the left to get started.</span>
       </div>
+
       <svg id="networkCanvas" class="network-canvas" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid meet">
         <defs>
-          <radialGradient id="routerGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="var(--accent-glow)" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="var(--accent-glow)" stop-opacity="0"/>
+          <radialGradient id="routerBodyGradient" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#1c2740"/>
+            <stop offset="100%" stop-color="#0e1424"/>
           </radialGradient>
-          <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3.2"/>
-          </filter>
         </defs>
         <g id="linksLayer"></g>
+        <g id="previewLayer"></g>
         <g id="packetLayer"></g>
         <g id="routersLayer"></g>
       </svg>
+
+      <div class="transmission-banner glass" id="transmissionBanner"></div>
     </main>
 
-    <!-- ============================= RIGHT SIDEBAR ============================= -->
-    <aside class="sidebar sidebar--right">
-      <section class="panel">
-        <h2 class="panel-title">Router Details</h2>
-        <div id="routerDetails" class="detail-box">
-          <p class="placeholder-text">Select a router to inspect it.</p>
+    <!-- ---------- RIGHT INFO PANEL ---------- -->
+    <aside class="info-panel">
+      <section class="panel-card glass fade-in-up">
+        <div class="panel-card-header">
+          <h2 class="panel-title">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg>
+            Router Details
+          </h2>
         </div>
+        <div id="routerDetails"><p class="placeholder-text">Select a router on the canvas to inspect it.</p></div>
       </section>
 
-      <section class="panel">
-        <h2 class="panel-title">Routing Table</h2>
-        <div id="routingTable" class="detail-box">
-          <p class="placeholder-text">Routing table will appear here.</p>
+      <section class="panel-card glass fade-in-up">
+        <div class="panel-card-header">
+          <h2 class="panel-title">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+            Routing Table
+          </h2>
         </div>
+        <div id="routingTable"><p class="placeholder-text">Routing table will appear here.</p></div>
       </section>
 
-      <section class="panel">
-        <h2 class="panel-title">Packet Details</h2>
-        <div id="packetDetails" class="detail-box">
-          <p class="placeholder-text">Send data to see packet breakdown.</p>
+      <section class="panel-card glass fade-in-up">
+        <div class="panel-card-header">
+          <h2 class="panel-title">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.27 6.96 12 12l8.73-5.04M12 22.08V12"/></svg>
+            Packet Details
+          </h2>
         </div>
+        <div id="packetDetails"><p class="placeholder-text">Send data to see the packet breakdown.</p></div>
       </section>
 
-      <section class="panel">
-        <h2 class="panel-title">Binary Stream</h2>
-        <div id="binaryStream" class="detail-box binary-box">
-          <p class="placeholder-text">Binary conversion will stream here.</p>
+      <section class="panel-card glass fade-in-up">
+        <div class="panel-card-header">
+          <h2 class="panel-title">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 12h4l2-8 4 16 2-8h6"/></svg>
+            Transmission Status
+          </h2>
         </div>
+        <div id="transmissionStatus"><p class="placeholder-text">No active transmission.</p></div>
+      </section>
+
+      <section class="panel-card glass fade-in-up">
+        <div class="panel-card-header">
+          <h2 class="panel-title">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 17 10 11 4 5M12 19h8"/></svg>
+            Binary Stream
+          </h2>
+        </div>
+        <div id="binaryStream"><p class="placeholder-text">ASCII → binary conversion will stream here.</p></div>
       </section>
     </aside>
 
   </div>
 
-  <!-- ============================= BOTTOM CONSOLE ============================= -->
-  <footer class="console">
-    <div class="console-header">
-      <span>Event Log</span>
-      <button id="clearConsole" class="console-clear">Clear</button>
+  <!-- ============================= TERMINAL CONSOLE ============================= -->
+  <footer class="console glass" id="consoleWrap">
+    <div class="console-header" id="consoleHeader">
+      <div class="console-header-left">
+        <span class="console-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="m4 17 6-6-6-6M12 19h8"/></svg>
+          Event Log
+        </span>
+        <span class="console-count" id="consoleCount">0</span>
+      </div>
+      <div class="console-header-right">
+        <button class="console-btn" id="clearConsole">Clear</button>
+        <svg class="console-collapse-icon" id="consoleCollapseIcon" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="m18 15-6-6-6 6"/></svg>
+      </div>
     </div>
     <div class="console-body" id="consoleBody"></div>
   </footer>
 
 </div>
 
-<!-- Naming-prompt modal for new routers -->
+<!-- ============================= MODALS ============================= -->
 <div class="modal-overlay" id="namePromptOverlay">
-  <div class="modal">
-    <h3>Name this router</h3>
+  <div class="modal glass">
+    <h3>
+      <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-hi)" stroke-width="2" fill="none"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg>
+      Name this router
+    </h3>
+    <p class="modal-sub">Give it a short, memorable label.</p>
     <input type="text" id="namePromptInput" class="field-input" placeholder="e.g. Core-1" maxlength="20" />
     <div class="modal-actions">
-      <button class="tool-btn" id="namePromptCancel">Cancel</button>
-      <button class="tool-btn tool-btn--primary" id="namePromptConfirm">Create</button>
+      <button class="btn" id="namePromptCancel">Cancel</button>
+      <button class="btn btn-primary" id="namePromptConfirm">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="sendModalOverlay">
+  <div class="modal glass">
+    <h3>
+      <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--cyan-hi)" stroke-width="2" fill="none"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
+      Transmit Data
+    </h3>
+    <p class="modal-sub">Message is converted to ASCII → binary and sent hop by hop.</p>
+    <div class="form-stack">
+      <label class="field-label">Source
+        <select id="sendSource" class="field-input"></select>
+      </label>
+      <label class="field-label">Destination
+        <select id="sendDestination" class="field-input"></select>
+      </label>
+      <label class="field-label">Message
+        <input id="sendMessage" class="field-input" type="text" placeholder="Hello World" maxlength="64" />
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="sendModalCancel">Cancel</button>
+      <button class="btn btn-primary" id="btnSendConfirm">Send Data ▸</button>
     </div>
   </div>
 </div>
@@ -195,6 +288,8 @@
 <script src="animation.js"></script>
 <script src="packet.js"></script>
 <script src="ui.js"></script>
+<script src="loader.js"></script>
+<script src="shortcuts.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

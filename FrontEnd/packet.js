@@ -4,7 +4,7 @@
  * Orchestrates a full "Send Data" transmission: calls the backend to
  * get the ASCII/binary breakdown + packets + initial path, then walks
  * each packet hop by hop across the SVG canvas. Routers visibly cycle
- * through Receiving -> Processing -> Forwarding as the payload moves
+ * through Receiving -> Processing -> Forwarding as the payload passes
  * through them. If a link is found down before a hop, the animation
  * pauses, a fresh Dijkstra route is requested from the backend, and
  * the transmission continues over the new path.
@@ -132,7 +132,7 @@ const PacketFlow = (() => {
       await Anim.wait(160);
 
       // PROCESSING
-      NetworkView.setRouterState(to, "processing", isLastHop ? "Processing…" : "Processing…");
+      NetworkView.setRouterState(to, "processing", "Processing…");
       await Anim.wait(180);
 
       UI.updateTransmissionProgress(path, index + 1);
