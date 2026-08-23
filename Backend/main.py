@@ -32,6 +32,10 @@ app.add_middleware(
 engine = SimulationEngine()
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8ae26fc (Update main.py file)
 class RouterCreate(BaseModel):
     name: Optional[str] = None
     x: float
@@ -134,9 +138,6 @@ def list_links():
     return engine.graph.links_to_list()
 
 
-# ======================================================================
-# ALGORITHM ENDPOINTS
-# ======================================================================
 @app.post("/route")
 def run_route(payload: RouteRequest):
     path, cost, visited_order = engine.routing.shortest_path(payload.source, payload.destination)
@@ -177,17 +178,12 @@ def run_bellman(payload: TraversalRequest):
     }
 
 
-# ======================================================================
-# DATA TRANSMISSION
-# ======================================================================
 @app.post("/send")
 def send_message(payload: SendRequest):
     return engine.send_message(payload.source, payload.destination, payload.message)
 
 
-# ======================================================================
-# EVENT LOG / STATS
-# ======================================================================
+
 @app.get("/events")
 def get_events(limit: int = 100):
     return engine.event_log[-limit:]
