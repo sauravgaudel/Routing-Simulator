@@ -20,7 +20,7 @@ from algorithms import bfs, dfs, bellman_ford, reconstruct_path
 
 app = FastAPI(title="Adaptive Network Routing Simulator", version="1.0.0")
 
-# Allow the static frontend (served from any local origin / file) to call the API.
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -32,9 +32,6 @@ app.add_middleware(
 engine = SimulationEngine()
 
 
-# ======================================================================
-# REQUEST SCHEMAS
-# ======================================================================
 class RouterCreate(BaseModel):
     name: Optional[str] = None
     x: float
@@ -72,9 +69,7 @@ class SendRequest(BaseModel):
     message: str
 
 
-# ======================================================================
-# ROUTER ENDPOINTS
-# ======================================================================
+
 @app.post("/router")
 def create_router(payload: RouterCreate):
     router = engine.add_router(payload.name, payload.x, payload.y)
@@ -102,9 +97,6 @@ def list_routers():
     return engine.graph.routers_to_list()
 
 
-# ======================================================================
-# LINK ENDPOINTS
-# ======================================================================
 @app.post("/link")
 def create_link(payload: LinkCreate):
     link = engine.add_link(payload.source, payload.destination)
