@@ -1,8 +1,6 @@
 """
 graph.py
---------
 Manual implementation of the network graph using an adjacency list.
-
 The Graph class is the single source of truth for topology: routers,
 links, and the derived adjacency list used by every algorithm in
 algorithms.py. No external graph library (e.g. networkx) is used.
@@ -10,8 +8,8 @@ algorithms.py. No external graph library (e.g. networkx) is used.
 
 from typing import Dict, List, Optional, Tuple
 
-from models import Router, Link, RouterStatus, LinkStatus
-from utils import euclidean_distance, distance_to_cost, id_generator
+from .models import Router, Link, RouterStatus, LinkStatus
+from .utils import euclidean_distance, distance_to_cost, id_generator
 
 
 class Graph:
@@ -22,9 +20,8 @@ class Graph:
         # links keyed by a stable, order-independent key: tuple(sorted([a, b]))
         self.links: Dict[Tuple[str, str], Link] = {}
 
-    # ------------------------------------------------------------------
+    
     # ROUTER OPERATIONS
-    # ------------------------------------------------------------------
     def add_router(self, name: str, x: float, y: float) -> Router:
         router_id = id_generator.next("R")
         router = Router(id=router_id, name=name or router_id, x=x, y=y)
@@ -50,9 +47,8 @@ class Graph:
         self._recompute_links_for(router_id)
         return router
 
-    # ------------------------------------------------------------------
+
     # LINK OPERATIONS
-    # ------------------------------------------------------------------
     @staticmethod
     def _link_key(a: str, b: str) -> Tuple[str, str]:
         return tuple(sorted([a, b]))  # type: ignore
@@ -100,9 +96,7 @@ class Graph:
                 link.distance = distance
                 link.cost = cost
 
-    # ------------------------------------------------------------------
     # ADJACENCY
-    # ------------------------------------------------------------------
     def get_adjacency(self, ignore_down: bool = True) -> Dict[str, List[Tuple[str, float]]]:
         """
         Builds a fresh adjacency list: { router_id: [(neighbor_id, cost), ...] }
@@ -123,9 +117,8 @@ class Graph:
             adjacency.setdefault(link.destination, []).append((link.source, link.cost))
         return adjacency
 
-    # ------------------------------------------------------------------
+    
     # SERIALIZATION
-    # ------------------------------------------------------------------
     def routers_to_list(self) -> List[dict]:
         return [r.to_dict() for r in self.routers.values()]
 

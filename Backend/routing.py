@@ -8,9 +8,9 @@ removed, moved, or failed).
 
 from typing import Dict, Optional
 
-from graph import Graph
-from models import RouteEntry
-from algorithms import dijkstra, reconstruct_path
+from .graph import Graph
+from .models import RouteEntry
+from .algorithms import dijkstra, reconstruct_path
 
 
 class RoutingManager:

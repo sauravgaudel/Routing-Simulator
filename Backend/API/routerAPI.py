@@ -1,15 +1,16 @@
-from ..main import engine
-import validation
-from fastapi import APIRouter,HTTPException
+from ..simulation import engine
+from .. import validation
+from fastapi import APIRouter,HTTPException,status
 
 router=APIRouter()
+
 @router.post("/router")
 def create_router(payload: validation.RouterCreate):
     router = engine.add_router(payload.name, payload.x, payload.y)
     return router.to_dict()
 
 
-@router.delete("/router/{router_id}")
+@router.delete("/router/{router_id}",status_code=status.HTTP_200_OK)
 def delete_router(router_id: str):
     ok = engine.remove_router(router_id)
     if not ok:
