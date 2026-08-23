@@ -1,20 +1,14 @@
 """
-main.py
--------
-FastAPI application entry point. Exposes the full REST API consumed by
-the vanilla-JS frontend. All state lives in a single in-memory
-SimulationEngine instance - there is no database.
-
-Run with:
-    uvicorn main:app --reload --port 8000
+Main.py : Main Entry Point of Backend
+There is no database and we have used simulation engine
+To run : python run.py
 """
-
-from typing import Optional, List
 from .API import algorithmRun,linkAPI,routerAPI
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from .simulation import engine
+
+
 app = FastAPI(title="Adaptive Network Routing Simulator", version="1.0.0")
 
 
@@ -26,9 +20,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
-
 app.include_router(algorithmRun.router)
 app.include_router(linkAPI.router)
 app.include_router(routerAPI.router)
@@ -37,11 +28,9 @@ app.include_router(routerAPI.router)
 def get_events(limit: int = 100):
     return engine.event_log[-limit:]
 
-
 @app.get("/stats")
 def get_stats():
     return engine.get_stats()
-
 
 @app.get("/")
 def root():

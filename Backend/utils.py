@@ -1,9 +1,9 @@
 """
 utils.py
---------
-Small, reusable helper functions used across the backend:
+
+Small, reusable helper functions used across the backend is written in this file:
 - geometry (distance / cost calculation)
-- ASCII <-> Binary conversion helpers
+- ASCII : Binary conversion helpers
 - timestamp helper for the event log
 - simple id generator
 """
@@ -13,10 +13,7 @@ import time
 import itertools
 from typing import List, Dict
 
-
-# ----------------------------------------------------------------------
 # ID GENERATION
-# ----------------------------------------------------------------------
 class IdGenerator:
     """Generates simple, human-readable, incrementing ids with a prefix."""
 
@@ -26,15 +23,13 @@ class IdGenerator:
     def next(self, prefix: str) -> str:
         if prefix not in self._counters:
             self._counters[prefix] = itertools.count(1)
-        return f"{prefix}{next(self._counters[prefix])}"
+        return f"{prefix}{next(self._counters[prefix])}" # Here NExt is python default function, so here no recursion is occuring
 
 
 id_generator = IdGenerator()
 
 
-# ----------------------------------------------------------------------
 # GEOMETRY / COST
-# ----------------------------------------------------------------------
 def euclidean_distance(x1: float, y1: float, x2: float, y2: float) -> float:
     """Straight line distance between two points."""
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
@@ -43,15 +38,10 @@ def euclidean_distance(x1: float, y1: float, x2: float, y2: float) -> float:
 def distance_to_cost(distance: float) -> float:
     """
     Converts a raw pixel distance into a routing 'cost'.
-    Kept as a separate function so the cost formula can be tuned
-    in a single place without touching graph logic.
     """
     return round(distance / 10.0, 2)
 
-
-# ----------------------------------------------------------------------
 # ASCII <-> BINARY
-# ----------------------------------------------------------------------
 def char_to_binary(ch: str) -> str:
     """Convert a single character to an 8-bit zero padded binary string."""
     return format(ord(ch), "08b")
@@ -59,9 +49,7 @@ def char_to_binary(ch: str) -> str:
 
 def ascii_to_binary_steps(message: str) -> List[Dict[str, str]]:
     """
-    Returns a step-by-step breakdown of the ASCII -> Binary conversion,
-    one entry per character, e.g.:
-        {"char": "H", "ascii": 72, "binary": "01001000"}
+    To convert entire message into its binary ASCII
     """
     steps = []
     for ch in message:
@@ -87,10 +75,7 @@ def binary_to_ascii(binary: str) -> str:
             chars.append(chr(int(byte, 2)))
     return "".join(chars)
 
-
-# ----------------------------------------------------------------------
-# TIME
-# ----------------------------------------------------------------------
+# TIME Stamp calculation
 def timestamp() -> str:
     """HH:MM:SS timestamp used in the event log."""
     return time.strftime("%H:%M:%S")

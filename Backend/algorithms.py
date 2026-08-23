@@ -1,11 +1,10 @@
 """
 algorithms.py
--------------
-Manual implementations of the core data structures and graph
-algorithms used by the simulator. Nothing here comes from an
-external graph library - only Python's heapq (used to back a
+
+Implementatino of Data Structure and Graph.
+ Python's heapq (used to back a
 custom priority queue) and collections.deque (used to back a
-custom queue) are used as low level building blocks.
+custom queue) are used as low level building blocks  used as external.
 """
 
 import heapq
@@ -14,13 +13,9 @@ from collections import deque
 from typing import Dict, List, Optional, Tuple
 
 
-# ======================================================================
 # MANUAL DATA STRUCTURES
-# ======================================================================
 class SimplePriorityQueue:
-    """Min priority queue backed by heapq, wrapped so callers never
-    touch heapq directly. Supports lazy deletion via a counter tiebreaker
-    so equal-priority items never raise a comparison error."""
+    #Priority Queue Backed up By HeapQ
 
     def __init__(self) -> None:
         self._heap: List[Tuple[float, int, object]] = []
@@ -39,7 +34,6 @@ class SimplePriorityQueue:
 
 class SimpleQueue:
     """FIFO queue backed by collections.deque."""
-
     def __init__(self) -> None:
         self._items = deque()
 
@@ -54,8 +48,6 @@ class SimpleQueue:
 
 
 class SimpleStack:
-    """LIFO stack backed by a plain Python list."""
-
     def __init__(self) -> None:
         self._items: List[object] = []
 
@@ -72,9 +64,7 @@ class SimpleStack:
 Adjacency = Dict[str, List[Tuple[str, float]]]
 
 
-# ======================================================================
 # PATH RECONSTRUCTION
-# ======================================================================
 def reconstruct_path(prev: Dict[str, Optional[str]], source: str, target: str) -> Optional[List[str]]:
     if target != source and target not in prev:
         return None
@@ -88,9 +78,7 @@ def reconstruct_path(prev: Dict[str, Optional[str]], source: str, target: str) -
     return path
 
 
-# ======================================================================
 # DIJKSTRA
-# ======================================================================
 def dijkstra(adjacency: Adjacency, source: str):
     """
     Returns:
@@ -126,9 +114,8 @@ def dijkstra(adjacency: Adjacency, source: str):
     return dist, prev, visited_order
 
 
-# ======================================================================
+
 # BFS
-# ======================================================================
 def bfs(adjacency: Adjacency, source: str):
     """
     Returns:
@@ -154,9 +141,7 @@ def bfs(adjacency: Adjacency, source: str):
     return order, prev
 
 
-# ======================================================================
 # DFS
-# ======================================================================
 def dfs(adjacency: Adjacency, source: str):
     """
     Returns:
@@ -185,49 +170,3 @@ def dfs(adjacency: Adjacency, source: str):
                 stack.push(neighbor)
 
     return order, prev
-
-
-# ======================================================================
-# BELLMAN-FORD
-# ======================================================================
-def bellman_ford(adjacency: Adjacency, source: str):
-    """
-    Returns:
-        dist: Dict[node, float]
-        prev: Dict[node, Optional[node]]
-        has_negative_cycle: bool
-        iterations: int              number of relaxation passes performed
-    """
-    nodes = list(adjacency.keys())
-    dist: Dict[str, float] = {node: float("inf") for node in nodes}
-    prev: Dict[str, Optional[str]] = {}
-    dist[source] = 0.0
-
-    # build a flat edge list (undirected -> both directions already present
-    # in the adjacency list construction in graph.py)
-    edges: List[Tuple[str, str, float]] = []
-    for u, neighbors in adjacency.items():
-        for v, w in neighbors:
-            edges.append((u, v, w))
-
-    iterations = 0
-    for i in range(len(nodes) - 1 if nodes else 0):
-        iterations += 1
-        updated = False
-        for u, v, w in edges:
-            if dist[u] + w < dist[v]:
-                dist[v] = dist[u] + w
-                prev[v] = u
-                updated = True
-        if not updated:
-            break
-
-    # one extra pass to detect negative cycles (won't trigger with
-    # positive euclidean-based costs, but kept for correctness/education)
-    has_negative_cycle = False
-    for u, v, w in edges:
-        if dist[u] + w < dist[v]:
-            has_negative_cycle = True
-            break
-
-    return dist, prev, has_negative_cycle, iterations

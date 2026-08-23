@@ -29,9 +29,7 @@ class SimulationEngine:
             "transmissions": 0,
         }
 
-    # ------------------------------------------------------------------
     # EVENT LOG
-    # ------------------------------------------------------------------
     def log(self, event_type: str, message: str) -> None:
         self.event_log.append({
             "time": timestamp(),
@@ -42,9 +40,7 @@ class SimulationEngine:
         if len(self.event_log) > 500:
             self.event_log = self.event_log[-500:]
 
-    # ------------------------------------------------------------------
     # TOPOLOGY MUTATIONS  (all trigger an automatic route recompute)
-    # ------------------------------------------------------------------
     def add_router(self, name: str, x: float, y: float):
         router = self.graph.add_router(name, x, y)
         self.log("Router Added", f"Router '{router.name}' ({router.id}) added at ({x:.0f}, {y:.0f}).")
@@ -98,9 +94,8 @@ class SimulationEngine:
         self.routing.recompute_all()
         self.log("Route Recomputed", "Routing tables rebuilt using Dijkstra's algorithm.")
 
-    # ------------------------------------------------------------------
+
     # TRANSMISSION
-    # ------------------------------------------------------------------
     def send_message(self, source: str, destination: str, message: str) -> dict:
         self.stats["transmissions"] += 1
 
@@ -151,9 +146,7 @@ class SimulationEngine:
             "reassembled_message": PacketBuilder.reassemble(packets),
         }
 
-    # ------------------------------------------------------------------
     # STATS
-    # ------------------------------------------------------------------
     def get_stats(self) -> dict:
         return {
             "routers": len(self.graph.routers),
