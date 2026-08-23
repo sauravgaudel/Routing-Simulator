@@ -1,7 +1,7 @@
-from ..main import engine
-import validation
+from ..simulation import engine
+from .. import validation
 from fastapi import APIRouter,HTTPException
-from algorithms import bfs, dfs, bellman_ford, reconstruct_path
+from ..algorithms import bfs, dfs, bellman_ford, reconstruct_path
 
 router=APIRouter()
 @router.post("/route")

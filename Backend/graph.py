@@ -10,8 +10,8 @@ algorithms.py. No external graph library (e.g. networkx) is used.
 
 from typing import Dict, List, Optional, Tuple
 
-from models import Router, Link, RouterStatus, LinkStatus
-from utils import euclidean_distance, distance_to_cost, id_generator
+from .models import Router, Link, RouterStatus, LinkStatus
+from .utils import euclidean_distance, distance_to_cost, id_generator
 
 
 class Graph:

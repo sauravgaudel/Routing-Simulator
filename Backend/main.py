@@ -10,14 +10,11 @@ Run with:
 """
 
 from typing import Optional, List
-from API_routing import algorithmRun,linkAPI,routerAPI
+from .API import algorithmRun,linkAPI,routerAPI
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import validation
-from simulation import SimulationEngine
-from algorithms import bfs, dfs, bellman_ford, reconstruct_path
-
+from .simulation import engine
 app = FastAPI(title="Adaptive Network Routing Simulator", version="1.0.0")
 
 
@@ -29,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-engine = SimulationEngine()
+
 
 
 app.include_router(algorithmRun.router)

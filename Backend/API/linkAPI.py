@@ -1,9 +1,8 @@
-
+from ..simulation import engine
 
 
 from fastapi import APIRouter,HTTPException
-from ..main import engine
-import validation
+from .. import validation
 
 router=APIRouter()
 

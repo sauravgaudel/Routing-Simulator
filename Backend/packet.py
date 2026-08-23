@@ -7,8 +7,8 @@ carrying a chunk of the message plus its binary representation.
 
 from typing import List
 
-from models import Packet, PacketStatus
-from utils import char_to_binary, id_generator
+from .models import Packet, PacketStatus
+from .utils import char_to_binary, id_generator
 
 # Number of characters carried by a single packet's payload.
 PACKET_CHUNK_SIZE = 4

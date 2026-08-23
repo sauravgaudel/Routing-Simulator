@@ -8,11 +8,11 @@ log and the running statistics shown in the UI's stats panel.
 
 from typing import Dict, List, Optional
 
-from graph import Graph
-from routing import RoutingManager
-from packet import PacketBuilder
-from models import LinkStatus, RouterStatus
-from utils import ascii_to_binary_steps, message_to_binary_stream, timestamp
+from .graph import Graph
+from .routing import RoutingManager
+from .packet import PacketBuilder
+from .models import LinkStatus, RouterStatus
+from .utils import ascii_to_binary_steps, message_to_binary_stream, timestamp
 
 
 class SimulationEngine:
@@ -164,3 +164,5 @@ class SimulationEngine:
             "packets_lost": self.stats["packets_lost"],
             "transmissions": self.stats["transmissions"],
         }
+
+engine=SimulationEngine()
