@@ -29,7 +29,6 @@ const App = (() => {
     });
 
     wireSidebarButtons();
-    wireAlgorithmButtons();
     wireSendModal();
     wireNameModalCloseOnOverlay();
     wireResetButton();
@@ -213,68 +212,6 @@ const App = (() => {
   }
 
   // ------------------------------------------------------------------
-  // ALGORITHM BUTTONS
-  // ------------------------------------------------------------------
-  function wireAlgorithmButtons() {
-    document.getElementById("btnDijkstra").addEventListener("click", () => runDijkstraView());
-    document.getElementById("btnBFS").addEventListener("click", () => runTraversal("bfs"));
-    document.getElementById("btnDFS").addEventListener("click", () => runTraversal("dfs"));
-    document.getElementById("btnBellman").addEventListener("click", () => runBellman());
-  }
-
-  function requireSelectedSource() {
-    if (!state.selectedRouterId) {
-      UI.toast("Click a router on the canvas to pick a source first.", "error");
-      return null;
-    }
-    return state.selectedRouterId;
-  }
-
-  function runDijkstraView() {
-    const sourceId = requireSelectedSource();
-    if (!sourceId) return;
-    renderSelectedRouterPanels();
-    UI.logLocal("Route Recomputed", `Dijkstra routing table for ${sourceId} shown in the right panel.`);
-    UI.toast("Dijkstra routing table shown in the Routing Table panel.", "success");
-  }
-
-  async function runTraversal(kind) {
-    const sourceId = requireSelectedSource();
-    if (!sourceId) return;
-    try {
-      const res = kind === "bfs" ? await API.bfs(sourceId) : await API.dfs(sourceId);
-      UI.logLocal(kind.toUpperCase(), `Traversal order from ${sourceId}: ${res.order.join(" → ")}`);
-      for (const id of res.order) {
-        NetworkView.pulseRouter(id, kind.toUpperCase());
-        await Anim.wait(280);
-      }
-    } catch (err) {
-      UI.toast(err.message, "error");
-    }
-  }
-
-  async function runBellman() {
-    const sourceId = requireSelectedSource();
-    if (!sourceId) return;
-    try {
-      const res = await API.bellman(sourceId);
-      const summary = Object.entries(res.distances)
-        .filter(([id]) => id !== sourceId)
-        .map(([id, cost]) => `${id}=${cost === null ? "unreachable" : cost}`)
-        .join(", ");
-      UI.logLocal("BELLMAN-FORD", `From ${sourceId}: ${summary || "no other routers"} (${res.iterations} iterations).`);
-      for (const id of Object.keys(res.distances)) {
-        if (res.distances[id] !== null) {
-          NetworkView.pulseRouter(id, "BF");
-          await Anim.wait(220);
-        }
-      }
-    } catch (err) {
-      UI.toast(err.message, "error");
-    }
-  }
-
-  // ------------------------------------------------------------------
   // SEND DATA MODAL
   // ------------------------------------------------------------------
   function wireSendModal() {
@@ -369,10 +306,6 @@ const App = (() => {
       "v": () => setMode("delete-link"),
       "z": () => setMode("fail-link"),
       "m": () => setMode("move"),
-      "j": () => runDijkstraView(),
-      "b": () => runTraversal("bfs"),
-      "f": () => runTraversal("dfs"),
-      "n": () => runBellman(),
       "s": () => document.getElementById("btnSendData").click(),
       "r": () => document.getElementById("btnReset").click(),
     }, cancelMode);

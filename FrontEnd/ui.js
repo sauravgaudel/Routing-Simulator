@@ -258,7 +258,7 @@ const UI = (() => {
     const btn = $("btnSendConfirm");
     if (!btn) return;
     btn.disabled = busy;
-    btn.textContent = busy ? "Transmitting…" : "Send Data ▸";
+    btn.textContent = busy ? "Transmitting…" : "Send Message ▸";
   }
 
   // ------------------------------------------------------------------

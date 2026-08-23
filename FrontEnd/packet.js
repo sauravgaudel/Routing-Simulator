@@ -79,7 +79,7 @@ const PacketFlow = (() => {
         UI.logLocal("Failure Detected", `Link ${from} -> ${to} is unavailable. Recomputing route with Dijkstra...`);
         UI.toast(`Link failure on ${from} → ${to}. Rerouting...`, "error");
         NetworkView.pulseRouter(from, "Rerouting…");
-        await Anim.wait(400); // visible "pause" beat before the reroute lands
+        await Anim.wait(1100); // visible "pause" beat before the reroute lands
 
         let reroute;
         try {
@@ -120,7 +120,7 @@ const PacketFlow = (() => {
           NetworkView.getPacketLayer(),
           packet.binary,
           posA.x, posA.y, posB.x, posB.y,
-          750
+          2200
         );
       }
       NetworkView.setLinkActiveFlow(from, to, false);
@@ -129,19 +129,20 @@ const PacketFlow = (() => {
       // RECEIVING at the next hop
       NetworkView.setRouterState(to, "receiving", "Receiving…");
       NetworkView.pulseRouter(to, "Receiving…");
-      await Anim.wait(160);
+      await Anim.wait(650);
 
       // PROCESSING
       NetworkView.setRouterState(to, "processing", "Processing…");
-      await Anim.wait(180);
+      await Anim.wait(650);
 
       UI.updateTransmissionProgress(path, index + 1);
 
       if (!isLastHop) {
         NetworkView.setRouterState(to, "idle");
+        await Anim.wait(300); // brief settle before the next hop starts
       } else {
         NetworkView.pulseRouter(to, "Delivered ✓");
-        await Anim.wait(200);
+        await Anim.wait(500);
         NetworkView.setRouterState(to, "idle");
       }
 

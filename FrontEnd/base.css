@@ -48,7 +48,7 @@
   --shadow-glow-cyan: 0 0 24px rgba(34, 211, 238, 0.35);
 
   /* --- layout metrics --- */
-  --sidebar-w: 76px;
+  --sidebar-w: 224px;
   --panel-w: 348px;
   --console-h: 230px;
   --console-h-collapsed: 44px;
@@ -110,8 +110,12 @@ a { color: var(--accent-hi); }
   min-width: 0;
 }
 
+@media (max-width: 1280px) {
+  :root { --sidebar-w: 188px; }
+}
+
 @media (max-width: 1080px) {
-  :root { --panel-w: 300px; }
+  :root { --panel-w: 300px; --sidebar-w: 168px; }
 }
 
 @media (max-width: 900px) {

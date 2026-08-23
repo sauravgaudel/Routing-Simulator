@@ -104,36 +104,58 @@
 .icon-sidebar {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 0;
+  align-items: stretch;
+  gap: 7px;
+  padding: 14px 10px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .icon-sidebar .sep {
-  width: 32px; height: 1px;
+  height: 1px;
   background: var(--glass-border);
-  margin: 6px 0;
+  margin: 6px 4px;
   flex-shrink: 0;
 }
 
 .icon-btn {
   position: relative;
-  width: 48px; height: 48px;
+  width: 100%;
+  height: 44px;
   flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 14px;
+  display: flex; align-items: center; justify-content: flex-start;
+  gap: 9px;
+  padding: 0 10px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
   border: 1px solid var(--glass-border);
   color: var(--text-mid);
   cursor: pointer;
   transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.icon-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+.icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; flex-shrink: 0; }
+.icon-btn .btn-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.icon-btn .kbd {
+  margin-left: auto;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
 .icon-btn:hover {
   color: var(--text-hi);
   border-color: var(--glass-border-hi);
   background: rgba(59,130,246,0.10);
-  transform: translateX(2px) scale(1.04);
+  transform: translateX(2px);
 }
 .icon-btn.active {
   color: #fff;
@@ -141,41 +163,15 @@
   border-color: transparent;
   box-shadow: var(--shadow-glow-blue);
 }
+.icon-btn.active .kbd { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.15); }
 .icon-btn.danger:hover { color: var(--red); border-color: rgba(245,86,107,0.4); background: rgba(245,86,107,0.08); }
 .icon-btn--primary {
   background: linear-gradient(135deg, var(--cyan), #0ea5c4);
   color: #04222a; border-color: transparent;
   box-shadow: var(--shadow-glow-cyan);
 }
-.icon-btn--primary:hover { transform: translateX(2px) scale(1.06); }
-
-.icon-btn .tooltip {
-  position: absolute;
-  left: calc(100% + 12px);
-  top: 50%; transform: translateY(-50%) translateX(-6px);
-  background: var(--glass-fill-strong);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  padding: 6px 11px;
-  border-radius: 8px;
-  font-size: 11.5px;
-  white-space: nowrap;
-  color: var(--text-hi);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  z-index: 40;
-}
-.icon-btn .tooltip .kbd {
-  margin-left: 6px;
-  padding: 1px 5px;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: var(--text-dim);
-  background: rgba(255,255,255,0.06);
-  border-radius: 4px;
-}
-.icon-btn:hover .tooltip { opacity: 1; transform: translateY(-50%) translateX(0); }
+.icon-btn--primary .kbd { color: rgba(4,34,42,0.6); background: rgba(4,34,42,0.12); }
+.icon-btn--primary:hover { transform: translateX(2px); }
 
 /* ==========================================================================
    CANVAS STAGE
@@ -399,6 +395,40 @@
   box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
 }
 .field-input::placeholder { color: var(--text-dim); }
+
+/* Native <select> elements ignore most of the above by default in some
+   browsers (white background, mismatched arrow/padding). Force them to
+   match every other field exactly. */
+select.field-input.select-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: rgba(255,255,255,0.04);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239fb0cc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 15px;
+  padding-right: 36px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  height: 42px;
+  line-height: normal;
+}
+select.field-input.select-input:hover { border-color: var(--glass-border-hi); }
+select.field-input.select-input:focus {
+  border-color: var(--accent-hi);
+  background-color: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+}
+/* Dropdown option list can't inherit backdrop-filter glass styling in any
+   browser, so give it a flat but matching dark background instead of the
+   default white. */
+select.field-input.select-input option {
+  background: var(--bg-1);
+  color: var(--text-hi);
+  padding: 8px;
+}
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;

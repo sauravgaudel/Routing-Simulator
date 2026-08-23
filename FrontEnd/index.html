@@ -88,57 +88,46 @@
     <nav class="icon-sidebar glass">
       <button class="icon-btn" data-mode="add-router" aria-label="Add Router">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M18 15.5v3M16.5 17h3"/></svg>
-        <span class="tooltip">Add Router <span class="kbd">A</span></span>
+        <span class="btn-label">Add Router</span>
+        <span class="kbd">A</span>
       </button>
-      <button class="icon-btn" data-mode="connect" aria-label="Connect">
+      <button class="icon-btn" data-mode="connect" aria-label="Connect Routers">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
-        <span class="tooltip">Connect <span class="kbd">C</span></span>
+        <span class="btn-label">Connect Routers</span>
+        <span class="kbd">C</span>
       </button>
       <button class="icon-btn danger" data-mode="delete-router" aria-label="Delete Router">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M16.5 17h3"/></svg>
-        <span class="tooltip">Delete Router <span class="kbd">X</span></span>
+        <span class="btn-label">Delete Router</span>
+        <span class="kbd">X</span>
       </button>
       <button class="icon-btn danger" data-mode="delete-link" aria-label="Delete Link">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.84 12.25 20.9 10.2a4.5 4.5 0 0 0-6.36-6.36L12.6 5.9M5.16 11.75 3.1 13.8a4.5 4.5 0 0 0 6.36 6.36l1.94-1.94M8 8l8 8"/></svg>
-        <span class="tooltip">Delete Link <span class="kbd">V</span></span>
+        <span class="btn-label">Delete Link</span>
+        <span class="kbd">V</span>
       </button>
       <button class="icon-btn danger" data-mode="fail-link" aria-label="Fail Link">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg>
-        <span class="tooltip">Fail Link <span class="kbd">Z</span></span>
+        <span class="btn-label">Fail Link</span>
+        <span class="kbd">Z</span>
       </button>
-      <button class="icon-btn" data-mode="move" aria-label="Move">
+      <button class="icon-btn" data-mode="move" aria-label="Move Router">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3"/></svg>
-        <span class="tooltip">Move <span class="kbd">M</span></span>
+        <span class="btn-label">Move Router</span>
+        <span class="kbd">M</span>
       </button>
 
       <div class="sep"></div>
 
-      <button class="icon-btn" id="btnDijkstra" aria-label="Dijkstra">
-        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/></svg>
-        <span class="tooltip">Run Dijkstra <span class="kbd">J</span></span>
-      </button>
-      <button class="icon-btn" id="btnBFS" aria-label="BFS">
-        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="8.5" y="14" width="7" height="7" rx="1.2"/></svg>
-        <span class="tooltip">Run BFS <span class="kbd">B</span></span>
-      </button>
-      <button class="icon-btn" id="btnDFS" aria-label="DFS">
-        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v10a4 4 0 0 0 4 4h8"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="17" r="2"/><circle cx="18" cy="7" r="2"/></svg>
-        <span class="tooltip">Run DFS <span class="kbd">F</span></span>
-      </button>
-      <button class="icon-btn" id="btnBellman" aria-label="Bellman-Ford">
-        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-8 4 16 2-8h6"/></svg>
-        <span class="tooltip">Bellman-Ford <span class="kbd">N</span></span>
-      </button>
-
-      <div class="sep"></div>
-
-      <button class="icon-btn icon-btn--primary" id="btnSendData" aria-label="Send Data">
+      <button class="icon-btn icon-btn--primary" id="btnSendData" aria-label="Send Message">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
-        <span class="tooltip">Send Data <span class="kbd">S</span></span>
+        <span class="btn-label">Send Message</span>
+        <span class="kbd">S</span>
       </button>
-      <button class="icon-btn danger" id="btnReset" aria-label="Reset">
+      <button class="icon-btn danger" id="btnReset" aria-label="Reset Topology">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-6h6"/></svg>
-        <span class="tooltip">Reset Topology <span class="kbd">R</span></span>
+        <span class="btn-label">Reset</span>
+        <span class="kbd">R</span>
       </button>
     </nav>
 
@@ -260,15 +249,15 @@
   <div class="modal glass">
     <h3>
       <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--cyan-hi)" stroke-width="2" fill="none"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
-      Transmit Data
+      Send Message
     </h3>
     <p class="modal-sub">Message is converted to ASCII → binary and sent hop by hop.</p>
     <div class="form-stack">
-      <label class="field-label">Source
-        <select id="sendSource" class="field-input"></select>
+      <label class="field-label">Select Source
+        <select id="sendSource" class="field-input select-input"></select>
       </label>
-      <label class="field-label">Destination
-        <select id="sendDestination" class="field-input"></select>
+      <label class="field-label">Select Destination
+        <select id="sendDestination" class="field-input select-input"></select>
       </label>
       <label class="field-label">Message
         <input id="sendMessage" class="field-input" type="text" placeholder="Hello World" maxlength="64" />
@@ -276,7 +265,7 @@
     </div>
     <div class="modal-actions">
       <button class="btn" id="sendModalCancel">Cancel</button>
-      <button class="btn btn-primary" id="btnSendConfirm">Send Data ▸</button>
+      <button class="btn btn-primary" id="btnSendConfirm">Send Message ▸</button>
     </div>
   </div>
 </div>

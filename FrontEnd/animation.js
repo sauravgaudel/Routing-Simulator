@@ -14,7 +14,7 @@ const Anim = (() => {
    * along a straight line, led by a small glowing orb. Resolves when
    * the animation completes.
    */
-  function animateBinaryAcrossLink(layer, binaryText, x1, y1, x2, y2, durationMs = 850) {
+  function animateBinaryAcrossLink(layer, binaryText, x1, y1, x2, y2, durationMs = 2200) {
     return new Promise((resolve) => {
       const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
