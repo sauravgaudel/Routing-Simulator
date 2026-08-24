@@ -1,10 +1,3 @@
-/**
- * api.js
- * ------
- * Thin wrapper around fetch() for every backend endpoint. Pure data
- * layer - no DOM access. Talks to the existing FastAPI backend
- * exactly as before; nothing here changes the backend contract.
- */
 
 const API = (() => {
   const BASE_URL = "http://127.0.0.1:8000";

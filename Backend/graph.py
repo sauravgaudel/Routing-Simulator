@@ -1,10 +1,3 @@
-"""
-graph.py
-Manual implementation of the network graph using an adjacency list.
-The Graph class is the single source of truth for topology: routers,
-links, and the derived adjacency list used by every algorithm in
-algorithms.py. No external graph library (e.g. networkx) is used.
-"""
 
 from typing import Dict, List, Optional, Tuple
 
@@ -13,8 +6,6 @@ from .utils import euclidean_distance, distance_to_cost, id_generator
 
 
 class Graph:
-    """Adjacency-list based undirected weighted graph of routers/links."""
-
     def __init__(self) -> None:
         self.routers: Dict[str, Router] = {}
         # links keyed by a stable, order-independent key: tuple(sorted([a, b]))

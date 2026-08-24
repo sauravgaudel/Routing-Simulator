@@ -1,13 +1,3 @@
-/**
- * graph.js
- * --------
- * Owns the SVG canvas: drawing routers/links from state, and turning
- * raw pointer events into semantic callbacks (onCanvasClick,
- * onRouterClick, onLinkClick, onRouterDrag...) that script.js wires
- * up to actual API calls. Visual-only helpers (glow states, path
- * highlighting, pulses) are also exposed here for animation.js /
- * packet.js to call into.
- */
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 

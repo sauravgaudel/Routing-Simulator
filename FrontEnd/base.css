@@ -1,51 +1,47 @@
-/* ==========================================================================
-   base.css
-   Design tokens, reset, and the top-level full-screen grid layout.
-   ========================================================================== */
 
 :root {
   /* --- surfaces --- */
-  --bg-deep: #060810;
-  --bg-0: #0a0e18;
-  --bg-1: #0e1424;
-  --glass-fill: rgba(18, 24, 40, 0.55);
-  --glass-fill-strong: rgba(22, 29, 48, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hi: rgba(120, 170, 255, 0.35);
+  --bg-deep: #eef2f7;
+  --bg-0: #ffffff;
+  --bg-1: #f7f9fc;
+  --glass-fill: #ffffff;
+  --glass-fill-strong: #ffffff;
+  --glass-border: #d9e1eb;
+  --glass-border-hi: #9bb9dc;
 
   /* --- text --- */
-  --text-hi: #f1f5fd;
-  --text-mid: #9fb0cc;
-  --text-dim: #5c6b8a;
+  --text-hi: #17212f;
+  --text-mid: #536276;
+  --text-dim: #8390a2;
 
   /* --- accents --- */
-  --accent: #3b82f6;
-  --accent-hi: #60a5fa;
-  --cyan: #22d3ee;
-  --cyan-hi: #67e8f9;
-  --violet: #a78bfa;
-  --amber: #f5a623;
-  --red: #f5566b;
-  --green: #34d399;
+  --accent: #2563eb;
+  --accent-hi: #1d4ed8;
+  --cyan: #0891b2;
+  --cyan-hi: #0e7490;
+  --violet: #7c3aed;
+  --amber: #d97706;
+  --red: #dc2626;
+  --green: #16a34a;
 
   /* --- router / packet state colors --- */
-  --state-idle: #3b82f6;
-  --state-receiving: #22d3ee;
-  --state-processing: #f5a623;
-  --state-forwarding: #34d399;
-  --state-down: #f5566b;
+  --state-idle: #2563eb;
+  --state-receiving: #0891b2;
+  --state-processing: #d97706;
+  --state-forwarding: #16a34a;
+  --state-down: #dc2626;
 
   /* --- type --- */
-  --font-ui: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-ui: "Segoe UI", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 
   /* --- radii / shadow --- */
-  --radius-lg: 18px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
-  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.45);
-  --shadow-glow-blue: 0 0 24px rgba(59, 130, 246, 0.35);
-  --shadow-glow-cyan: 0 0 24px rgba(34, 211, 238, 0.35);
+  --radius-lg: 8px;
+  --radius-md: 6px;
+  --radius-sm: 4px;
+  --shadow-glass: 0 2px 8px rgba(31, 48, 73, 0.08);
+  --shadow-glow-blue: 0 2px 10px rgba(37, 99, 235, 0.18);
+  --shadow-glow-cyan: 0 2px 10px rgba(8, 145, 178, 0.18);
 
   /* --- layout metrics --- */
   --sidebar-w: 224px;
@@ -90,11 +86,7 @@ a { color: var(--accent-hi); }
   width: 100vw;
   display: grid;
   grid-template-rows: var(--header-h) 1fr var(--console-h);
-  background:
-    radial-gradient(ellipse 900px 500px at 10% -10%, rgba(59, 130, 246, 0.14), transparent 60%),
-    radial-gradient(ellipse 900px 600px at 95% 10%, rgba(34, 211, 238, 0.10), transparent 55%),
-    radial-gradient(ellipse 800px 500px at 50% 120%, rgba(167, 139, 250, 0.08), transparent 60%),
-    var(--bg-deep);
+  background: var(--bg-deep);
   transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .app-shell.console-collapsed {
@@ -121,4 +113,13 @@ a { color: var(--accent-hi); }
 @media (max-width: 900px) {
   .main-area { grid-template-columns: var(--sidebar-w) 1fr; }
   .info-panel { display: none; }
+}
+
+@media (max-height: 600px) {
+  :root { --header-h: 72px; --console-h: 120px; }
+  .app-header { padding-top: 8px; padding-bottom: 8px; }
+}
+
+@media (max-height: 420px) {
+  :root { --header-h: 60px; --console-h: 44px; }
 }

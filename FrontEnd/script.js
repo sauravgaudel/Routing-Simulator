@@ -1,10 +1,4 @@
-/**
- * script.js
- * ---------
- * Application entry point. Owns frontend state (current tool mode,
- * routers, links, selection) and wires every icon button / canvas
- * interaction / keyboard shortcut to the API + view layers.
- */
+
 
 const App = (() => {
   const state = {
@@ -14,10 +8,8 @@ const App = (() => {
     selectedRouterId: null,
     connectFirstId: null,
   };
+  let sendInProgress = false;
 
-  // ------------------------------------------------------------------
-  // INIT
-  // ------------------------------------------------------------------
   async function init() {
     NetworkView.init(document.getElementById("networkCanvas"), {
       getMode: () => state.mode,
@@ -225,6 +217,8 @@ const App = (() => {
     document.getElementById("sendModalCancel").addEventListener("click", () => UI.closeSendModal());
 
     document.getElementById("btnSendConfirm").addEventListener("click", async () => {
+      if (sendInProgress) return;
+
       const source = document.getElementById("sendSource").value;
       const destination = document.getElementById("sendDestination").value;
       const message = document.getElementById("sendMessage").value;
@@ -241,8 +235,13 @@ const App = (() => {
         UI.toast("Type a message to transmit.", "error");
         return;
       }
+      sendInProgress = true;
       UI.closeSendModal();
-      await PacketFlow.run(source, destination, message);
+      try {
+        await PacketFlow.run(source, destination, message);
+      } finally {
+        sendInProgress = false;
+      }
     });
   }
 
@@ -328,7 +327,7 @@ const App = (() => {
         state.selectedRouterId = null;
       }
     } catch (err) {
-      // API offline - status dot already communicates this
+ 
     }
   }
 

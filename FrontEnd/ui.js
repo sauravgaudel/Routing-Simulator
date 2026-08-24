@@ -1,10 +1,4 @@
-/**
- * ui.js
- * -----
- * DOM rendering helpers for everything outside the SVG canvas: stat
- * cards, the terminal console, right-panel detail boxes, the
- * transmission status widget, modals, and toasts.
- */
+
 
 const UI = (() => {
   const $ = (id) => document.getElementById(id);
@@ -12,9 +6,7 @@ const UI = (() => {
   let renderedEventCount = 0;
   let bannerHideTimer = null;
 
-  // ------------------------------------------------------------------
-  // CONSOLE
-  // ------------------------------------------------------------------
+
   function typeToClass(type) {
     return "log-type--" + type.replace(/\s+/g, "-");
   }
@@ -66,9 +58,7 @@ const UI = (() => {
     document.getElementById("appShell").classList.toggle("console-collapsed");
   }
 
-  // ------------------------------------------------------------------
-  // STATS
-  // ------------------------------------------------------------------
+
   function bump(el) {
     el.classList.remove("stat-bump");
     void el.offsetWidth;
@@ -99,9 +89,7 @@ const UI = (() => {
     val.textContent = active ? (label || "Active") : "Idle";
   }
 
-  // ------------------------------------------------------------------
-  // ROUTER DETAILS / ROUTING TABLE
-  // ------------------------------------------------------------------
+  
   function renderRouterDetails(router, degree) {
     if (!router) {
       $("routerDetails").innerHTML = `<p class="placeholder-text">Select a router on the canvas to inspect it.</p>`;

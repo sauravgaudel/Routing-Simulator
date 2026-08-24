@@ -1,19 +1,7 @@
-/**
- * animation.js
- * ------------
- * Low level animation primitives built on requestAnimationFrame.
- * packet.js calls `animateBinaryAcrossLink` once per hop; this module
- * doesn't know anything about packets, routing, or the API - it just
- * moves an SVG <text> + glow orb from point A to point B.
- */
+
 
 const Anim = (() => {
 
-  /**
-   * Animates the actual binary payload sliding from (x1,y1) to (x2,y2)
-   * along a straight line, led by a small glowing orb. Resolves when
-   * the animation completes.
-   */
   function animateBinaryAcrossLink(layer, binaryText, x1, y1, x2, y2, durationMs = 2200) {
     return new Promise((resolve) => {
       const group = document.createElementNS("http://www.w3.org/2000/svg", "g");

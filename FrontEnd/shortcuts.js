@@ -1,11 +1,4 @@
-/**
- * shortcuts.js
- * ------------
- * Generic keyboard shortcut dispatcher. script.js registers a map of
- * { key: handler } and this module takes care of ignoring keystrokes
- * while the user is typing in a form field, and honoring Escape even
- * inside form fields (to close modals / cancel the current mode).
- */
+
 
 const Shortcuts = (() => {
   let bindings = {};
