@@ -1,10 +1,3 @@
-/**
- * loader.js
- * ---------
- * Drives the full-screen startup loading animation. Shows a sequence
- * of status messages while the real API health check happens in the
- * background, then fades the screen out once both are done.
- */
 
 const Loader = (() => {
   const STEPS = [

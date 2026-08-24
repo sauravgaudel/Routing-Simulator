@@ -1,12 +1,3 @@
-"""
-models.py
----------
-Core in-memory data model for the network simulator.
-
-No database is used - Router / Link / RouteEntry / Packet instances
-live purely in Python objects held by the Graph / SimulationEngine
-singleton created in main.py.
-"""
 
 from dataclasses import dataclass, field
 from enum import Enum
@@ -47,7 +38,7 @@ class RouteEntry:
         }
 
 
-@dataclass
+@dataclass #prevent from writing boiler plate
 class Router:
     """A single node (router) in the network graph."""
     id: str

@@ -1,14 +1,4 @@
-/**
- * packet.js
- * ---------
- * Orchestrates a full "Send Data" transmission: calls the backend to
- * get the ASCII/binary breakdown + packets + initial path, then walks
- * each packet hop by hop across the SVG canvas. Routers visibly cycle
- * through Receiving -> Processing -> Forwarding as the payload passes
- * through them. If a link is found down before a hop, the animation
- * pauses, a fresh Dijkstra route is requested from the backend, and
- * the transmission continues over the new path.
- */
+
 
 const PacketFlow = (() => {
 

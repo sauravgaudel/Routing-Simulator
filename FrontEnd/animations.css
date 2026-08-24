@@ -1,7 +1,3 @@
-/* ==========================================================================
-   animations.css
-   Every @keyframes definition used across the app, kept in one place.
-   ========================================================================== */
 
 @keyframes spin {
   from { transform: rotate(0deg); }
